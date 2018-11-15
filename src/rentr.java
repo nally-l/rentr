@@ -3,6 +3,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -18,7 +19,13 @@ public class rentr {
         Button like = new Button("Like");
         Button pass = new Button("Pass");
 
-        Pane pane = new Pane();
+        FlowPane pane = new FlowPane();
+
+        like.setOnAction(new likeHandler());
+        pass.setOnAction(new passHandler());
+        pane.getChildren().add(like);
+        pane.getChildren().add(pass);
+
         Scene scene = new Scene(pane, 150, 100);
         primaryStage.setTitle("MyKeyEvent");
         primaryStage.setScene(scene);
@@ -31,12 +38,11 @@ public class rentr {
         public void setCurrentProperty(Rental rental) {
             tempRental = rental;
         }
-
         public void setCurrentProperty(Purchase purchase) {
             tempPurchase = purchase;
         }
 
-        public void addCurrentProperty() {
+        private void addCurrentProperty() {
             if (tempRental != null) {
                 likedRentals.add(tempRental);
                 seenRentals.add(tempRental);
@@ -55,11 +61,29 @@ public class rentr {
     }
 
     class passHandler implements EventHandler<ActionEvent> {
+        private Rental tempRental;
+        private Purchase tempPurchase;
+        public void setCurrentProperty(Rental rental) {
+            tempRental = rental;
+        }
+
+        public void setCurrentProperty(Purchase purchase) {
+            tempPurchase = purchase;
+        }
+
+        private void addCurrentProperty() {
+            if (tempRental != null) {
+                seenRentals.add(tempRental);
+                tempRental = null;
+            } else if (tempPurchase != null) {
+                seenPurchases.add(tempPurchase);
+                tempPurchase = null;
+            }
+        }
+
         @Override
         public void handle(ActionEvent event) {
-        /*
-        Adds that property to the "seen" list
-         */
+            addCurrentProperty();
         }
     }
 
